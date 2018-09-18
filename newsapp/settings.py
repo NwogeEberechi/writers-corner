@@ -25,7 +25,7 @@ SECRET_KEY = '+$l+29(6hv3@(g*^x)-71t7oi@e8y4m2&ps(mhw$82o_*l2df*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'writers-korner-api.herokuapp.com']
 
 
 # Application definition
