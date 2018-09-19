@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import Article
+from .models import Article, CustomUser
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -12,15 +12,16 @@ class ArticleSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        model = CustomUser
+        fields = ('username', 'email', 'password', 'is_active')
 
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+        def create(self):
+            user = CustomUser(
+                email='email',
+                username='username',
+                password='password',
+                is_active=1
+            )
+            user.save()
+            Token.objects.create(user=user)
+            return user
