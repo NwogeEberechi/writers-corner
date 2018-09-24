@@ -1,10 +1,11 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 
-from .models import Article, CustomUser
+from .models import Article
 from  .serializers import ArticleSerializer, UserSerializer
 
 # Create your views here.
@@ -21,24 +22,13 @@ class ArticleDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-class UserList(generics.ListCreateAPIView):
-    authentication_classes = ()
-    permission_classes = ()
-    queryset = CustomUser.objects.all()
+class Users(generics.ListAPIView):
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class UserDetail(generics.RetrieveUpdateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-
-class Login(APIView):
-    permission_classes = ()
-
-    def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        user = authenticate(request, username=username, password=password)
-        if user:
-            return Response({"token": user.auth_token.key})
-        else:
-            return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+class UserArticle(APIView):
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        queryset = user.article_set.all()
+        data = ArticleSerializer(queryset, many=True).data
+        return Response(data)

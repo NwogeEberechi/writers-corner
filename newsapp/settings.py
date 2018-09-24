@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
     'newsapi',
 ]
 
@@ -132,4 +137,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-AUTH_USER_MODEL = 'newsapi.CustomUser'
+#AUTH_USER_MODEL = 'newsapi.CustomUser'
+SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
