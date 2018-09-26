@@ -1,11 +1,10 @@
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 from .models import Article
@@ -13,15 +12,17 @@ from  .serializers import ArticleSerializer, UserSerializer
 
 # Create your views here.
 class Index(APIView):
+    permission_classes = ()
+
     def get(self, request):
-        data = {"details": "Welcome to Writers-Corner news api"}
-        return Response(data)
+        return Response(data= {"details": "Welcome to Writers-Corner news api"})
 
 class UserViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = User.objects.all()
         data = UserSerializer(queryset, many=True).data
         return Response(data)
+
     def retrieve(self, request, pk=None):
         user = get_object_or_404(User, pk=pk)
         data = UserSerializer(user).data
